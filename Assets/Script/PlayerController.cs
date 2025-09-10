@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 public class PlayerController : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,10 +18,12 @@ public class PlayerController : MonoBehaviour
     public Transform particles;
     private ParticleSystem particleSystem;
     private Vector3 position;
+    private AudioSource audioRecoleccion;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        audioRecoleccion = GetComponent<AudioSource>();
         contador = 0;
         SetCountText();
         mensajeGanar.SetActive(false);
@@ -57,18 +61,28 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Recolectable"))
         {
+            position = other.gameObject.transform.position;
+            particles.position = position;
+            particleSystem =  particles.GetComponent<ParticleSystem>();
             other.gameObject.SetActive(false);
             contador += 1;
             SetCountText();
+            particleSystem.Play();
+            audioRecoleccion.Play();
         }
     }
     
     void SetCountText()
     {
         puntajeGUI.text = "Puntaje: " + contador.ToString();
-        if (contador >= 30)
+        if (contador >= 5)
         {
             mensajeGanar.SetActive(true);
+            Invoke("SceneChange", 3f);
         }
+    }
+
+    void SceneChange(){
+       SceneManager.LoadScene(1);
     }
 }
