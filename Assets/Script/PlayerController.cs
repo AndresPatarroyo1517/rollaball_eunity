@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
     void SetCountText()
     {
         puntajeGUI.text = "Puntaje: " + contador.ToString();
-        if (contador >= 5)
+        if (contador >= 20)
         {
             mensajeGanar.SetActive(true);
             Invoke("SceneChange", 3f);
