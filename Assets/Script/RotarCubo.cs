@@ -36,4 +36,24 @@ public class RotarCubo : MonoBehaviour
             break;
         }
     }
+    
+    public void MoverX(float value){
+        transform.position = new Vector3(value, transform.position.y, transform.position.z);
+    }
+
+    public void MoverY(float value){
+        transform.position = new Vector3(transform.position.x, 1+value, transform.position.z);
+    }
+
+    public void MoverZ(float value){
+        transform.position = new Vector3(transform.position.x, transform.position.y, value);
+    }
+
+
+    public void Reset(){
+        transform.position = new Vector3(0,1,0);
+        transform.localScale = new Vector3(2, 2, 2);
+        material.color = Color.yellow;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
 }
