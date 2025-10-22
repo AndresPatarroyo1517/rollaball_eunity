@@ -64,6 +64,7 @@ public class PlayerController : MonoBehaviour
             position = other.gameObject.transform.position;
             particles.position = position;
             particleSystem =  particles.GetComponent<ParticleSystem>();
+            StartCoroutine(DetenerParticulas(particleSystem));
             other.gameObject.SetActive(false);
             contador += 1;
             SetCountText();
@@ -84,5 +85,10 @@ public class PlayerController : MonoBehaviour
 
     void SceneChange(){
        SceneManager.LoadScene(1);
+    }
+
+    public IEnumerator DetenerParticulas(ParticleSystem part){
+        yield return new WaitForSecondsRealtime(5);
+        part.Stop();
     }
 }
