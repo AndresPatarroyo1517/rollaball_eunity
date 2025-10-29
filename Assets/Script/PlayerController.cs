@@ -8,13 +8,14 @@ public class PlayerController : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private int contador;
+    Animator anim;
     private Rigidbody rb;
     public float speed;
+    public GameObject power;
     public float jumpForce = 5f;
     private bool isGrounded = true;
     public TextMeshProUGUI puntajeGUI;
     public GameObject mensajeGanar;
-
     public Transform particles;
     private ParticleSystem particleSystem;
     private Vector3 position;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
         mensajeGanar.SetActive(false);
         particleSystem = particles.GetComponent<ParticleSystem>();
         particleSystem.Stop();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -38,6 +40,10 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
+        }
+       if (Input.GetButtonDown("Fire1"))
+        {
+           Animate();
         }
     }
 
@@ -64,7 +70,7 @@ public class PlayerController : MonoBehaviour
             position = other.gameObject.transform.position;
             particles.position = position;
             particleSystem =  particles.GetComponent<ParticleSystem>();
-            StartCoroutine(DetenerParticulas(particleSystem));
+            StartCoroutine(StopParticles(particleSystem));
             other.gameObject.SetActive(false);
             contador += 1;
             SetCountText();
@@ -87,8 +93,20 @@ public class PlayerController : MonoBehaviour
        SceneManager.LoadScene(1);
     }
 
-    public IEnumerator DetenerParticulas(ParticleSystem part){
+    public IEnumerator StopParticles(ParticleSystem part){
         yield return new WaitForSecondsRealtime(5);
         part.Stop();
+    }
+
+    public void Animate(){
+        StartCoroutine(Restart());
+    }
+
+    public IEnumerator Restart(){
+        anim.SetBool("Punch", true);
+        yield return new WaitForSecondsRealtime(0.6f);
+        power.transform.position = transform.position;
+        power.SendMessage("Shoot");
+        anim.SetBool("Punch", false);
     }
 }
